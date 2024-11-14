@@ -1,6 +1,9 @@
 package com.ijse.cmjdfinal.backend.controller;
 
+import com.ijse.cmjdfinal.backend.dto.ItemReqDto;
+import com.ijse.cmjdfinal.backend.entity.Category;
 import com.ijse.cmjdfinal.backend.entity.Item;
+import com.ijse.cmjdfinal.backend.service.CategoryService;
 import com.ijse.cmjdfinal.backend.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,9 +18,21 @@ public class ItemController {
     @Autowired
     private ItemService itemService;
 
+    @Autowired
+    private CategoryService categoryService;
+
     @PostMapping("/item")
-    public ResponseEntity<Item> createItem(@RequestBody Item item) {
-        return ResponseEntity.status(201).body(itemService.createItem(item));
+    public ResponseEntity<Item> createItem(@RequestBody ItemReqDto itemReqDto) {
+
+        Item item = new Item();
+        item.setName(itemReqDto.getName());
+        item.setDescription(itemReqDto.getDescription());
+        item.setPrice(itemReqDto.getPrice());
+
+        Category category = categoryService.getCategoryById(itemReqDto.getCategoryId());
+        item.setCategory(category);
+
+        return ResponseEntity.status(200).body(itemService.createItem(item));
     }
 
     @GetMapping("/item/{id}")
@@ -36,5 +51,8 @@ public class ItemController {
     }
 
     @DeleteMapping("/item/{id}")
-    public ResponseEntity<>
+    public ResponseEntity<String> deleteItem(@PathVariable Long id) {
+        itemService.deleteItem(id);
+        return ResponseEntity.status(200).body("Item deleted successfully");
+    }
 }
