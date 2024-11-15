@@ -3,8 +3,10 @@ package com.ijse.cmjdfinal.backend.controller;
 import com.ijse.cmjdfinal.backend.dto.ItemReqDto;
 import com.ijse.cmjdfinal.backend.entity.Category;
 import com.ijse.cmjdfinal.backend.entity.Item;
+import com.ijse.cmjdfinal.backend.entity.Stock;
 import com.ijse.cmjdfinal.backend.service.CategoryService;
 import com.ijse.cmjdfinal.backend.service.ItemService;
+import com.ijse.cmjdfinal.backend.service.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +23,9 @@ public class ItemController {
     @Autowired
     private CategoryService categoryService;
 
+    @Autowired
+    private StockService stockService;
+
     @PostMapping("/item")
     public ResponseEntity<Item> createItem(@RequestBody ItemReqDto itemReqDto) {
 
@@ -31,6 +36,9 @@ public class ItemController {
 
         Category category = categoryService.getCategoryById(itemReqDto.getCategoryId());
         item.setCategory(category);
+
+        Stock stock = stockService.getStockById(itemReqDto.getStockId());
+        item.setStock(stock);
 
         return ResponseEntity.status(200).body(itemService.createItem(item));
     }
@@ -46,7 +54,19 @@ public class ItemController {
     }
 
     @PutMapping("/item/{id}")
-    public ResponseEntity<Item> updateItem(@PathVariable Long id, @RequestBody Item item) {
+    public ResponseEntity<Item> updateItem(@PathVariable Long id, @RequestBody ItemReqDto itemReqDto) {
+
+        Item item = new Item();
+        item.setName(itemReqDto.getName());
+        item.setDescription(itemReqDto.getDescription());
+        item.setPrice(itemReqDto.getPrice());
+
+        Category category = categoryService.getCategoryById(itemReqDto.getCategoryId());
+        item.setCategory(category);
+
+        Stock stock = stockService.getStockById(itemReqDto.getStockId());
+        item.setStock(stock);
+
         return ResponseEntity.status(200).body(itemService.updateItem(id, item));
     }
 

@@ -15,4 +15,5 @@ public class ItemReqDto {
     private String description;
     private double price;
     private Long categoryId;
+    private Long stockId;
 }

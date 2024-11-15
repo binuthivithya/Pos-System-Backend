@@ -1,5 +1,6 @@
 package com.ijse.cmjdfinal.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,21 +12,15 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Item {
+public class Stock {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
-    private String description;
-    private double price;
+    private Integer quantity;
 
-    @ManyToOne
-    @JoinColumn(name = "category_id")
-    private Category category;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "stock_id", referencedColumnName = "id")
-    private Stock stock;
+    @JsonIgnore
+    @OneToOne(mappedBy = "stock")
+    private Item item;
 }
