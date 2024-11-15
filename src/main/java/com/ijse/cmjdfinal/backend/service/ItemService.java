@@ -12,4 +12,5 @@ public interface ItemService {
     List<Item> getAllItems();
     Item updateItem(Long id, Item item);
     void deleteItem(Long id);
+    Item updateItemStock(Long id, int qty);
 }

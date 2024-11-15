@@ -1,6 +1,7 @@
 package com.ijse.cmjdfinal.backend.controller;
 
 import com.ijse.cmjdfinal.backend.dto.ItemReqDto;
+import com.ijse.cmjdfinal.backend.dto.StockReqDto;
 import com.ijse.cmjdfinal.backend.entity.Category;
 import com.ijse.cmjdfinal.backend.entity.Item;
 import com.ijse.cmjdfinal.backend.entity.Stock;
@@ -32,7 +33,6 @@ public class ItemController {
         Item item = new Item();
         item.setName(itemReqDto.getName());
         item.setDescription(itemReqDto.getDescription());
-        item.setPrice(itemReqDto.getPrice());
 
         Category category = categoryService.getCategoryById(itemReqDto.getCategoryId());
         item.setCategory(category);
@@ -59,7 +59,6 @@ public class ItemController {
         Item item = new Item();
         item.setName(itemReqDto.getName());
         item.setDescription(itemReqDto.getDescription());
-        item.setPrice(itemReqDto.getPrice());
 
         Category category = categoryService.getCategoryById(itemReqDto.getCategoryId());
         item.setCategory(category);
@@ -74,5 +73,10 @@ public class ItemController {
     public ResponseEntity<String> deleteItem(@PathVariable Long id) {
         itemService.deleteItem(id);
         return ResponseEntity.status(200).body("Item deleted successfully");
+    }
+
+    @PutMapping("/item/{id}/stock")
+    public ResponseEntity<Item> updateItemStock(@PathVariable Long id, @RequestBody StockReqDto stockReqDto) {
+        return ResponseEntity.status(200).body(itemService.updateItemStock(id, stockReqDto.getQuantity()));
     }
 }

@@ -9,10 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ItemReqDto {
+public class StockReqDto {
 
-    private String name;
-    private String description;
-    private Long categoryId;
-    private Long stockId;
+    private Integer quantity;
 }

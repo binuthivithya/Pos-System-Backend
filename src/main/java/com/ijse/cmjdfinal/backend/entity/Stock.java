@@ -19,6 +19,7 @@ public class Stock {
     private Long id;
 
     private Integer quantity;
+    private double price;
 
     @JsonIgnore
     @OneToOne(mappedBy = "stock")

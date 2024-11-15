@@ -41,6 +41,7 @@ public class StockServiceImpl implements StockService {
 
             existingStock.setQuantity(stock.getQuantity());
             existingStock.setItem(stock.getItem());
+            existingStock.setPrice(stock.getPrice());
 
             return stockRepository.save(existingStock);
         }
