@@ -39,7 +39,7 @@ public class OrderServiceImpl implements OrderService {
         } else {
             existingOrders.setOrderDateTime(orders.getOrderDateTime());
             existingOrders.setTotalPrice(orders.getTotalPrice());
-            existingOrders.setOrderedItems(orders.getOrderedItems());
+            existingOrders.setOrderedItemDetails(orders.getOrderedItemDetails());
             return orderRepository.save(existingOrders);
         }
     }

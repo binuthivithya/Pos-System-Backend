@@ -1,5 +1,6 @@
 package com.ijse.cmjdfinal.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -30,11 +32,16 @@ public class Orders {
         }
     }
 
-    @ManyToMany
-    @JoinTable(
-            name = "order_item",
-            joinColumns = @JoinColumn(name = "order_id"),
-            inverseJoinColumns = @JoinColumn(name = "item_id")
-    )
-    private List<Item> orderedItems;
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    private List<OrderedItemDetails> orderedItemDetails = new ArrayList<>();
+
+    // Helper method to add items
+    public void addItem(Item item, int quantity, double unitPrice) {
+        OrderedItemDetails details = new OrderedItemDetails();
+        details.setOrder(this);
+        details.setItem(item);
+        details.setQuantity(quantity);
+        details.setUnitPrice(unitPrice);
+        orderedItemDetails.add(details);
+    }
 }

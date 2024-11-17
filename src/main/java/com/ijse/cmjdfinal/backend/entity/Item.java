@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -32,6 +33,6 @@ public class Item {
     private Stock stock;
 
     @JsonIgnore
-    @ManyToMany(mappedBy = "orderedItems")
-    private List<Orders> orders;
+    @OneToMany(mappedBy = "item")
+    private List<OrderedItemDetails> orderedItemDetails = new ArrayList<>();
 }

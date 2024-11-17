@@ -3,12 +3,13 @@ package com.ijse.cmjdfinal.backend.controller;
 import com.ijse.cmjdfinal.backend.dto.OrderDetailReqDto;
 import com.ijse.cmjdfinal.backend.dto.OrderItemDetailReqDto;
 import com.ijse.cmjdfinal.backend.entity.Item;
+import com.ijse.cmjdfinal.backend.entity.OrderedItemDetails;
 import com.ijse.cmjdfinal.backend.entity.Orders;
 import com.ijse.cmjdfinal.backend.entity.Stock;
 import com.ijse.cmjdfinal.backend.service.ItemService;
 import com.ijse.cmjdfinal.backend.service.OrderService;
+import com.ijse.cmjdfinal.backend.service.OrderedItemDetailsService;
 import com.ijse.cmjdfinal.backend.service.StockService;
-import org.hibernate.query.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,9 +28,6 @@ public class OrderController {
     @Autowired
     private ItemService itemService;
 
-    @Autowired
-    private StockService stockService;
-
     @PostMapping("/orders")
     public ResponseEntity<Orders> placeOrder(@RequestBody OrderDetailReqDto orderDetailReqDto) {
 
@@ -37,17 +35,38 @@ public class OrderController {
         orders.setOrderDateTime(LocalDateTime.now());
 
         double totalPrice = 0.0;
-        List<Item> itemList = new ArrayList<>();
-
+        List<OrderedItemDetails> itemList = new ArrayList<>();
+        // Loop through the ordered items in the DTO
         for(OrderItemDetailReqDto orderedItemList : orderDetailReqDto.getOrderedItems()) {
+            // Update the item stock
             itemService.updateItemStock(orderedItemList.getItemId(), orderedItemList.getQuantity());
-            totalPrice += ((itemService.getItemById(orderedItemList.getItemId()).getStock().getPrice())*(orderedItemList.getQuantity()));
-            itemList.add(itemService.getItemById(orderedItemList.getItemId()));
+
+            //Calculate total price
+            Item item = itemService.getItemById(orderedItemList.getItemId());
+            Stock stock = item.getStock();
+            double itemTotal = stock.getPrice() * orderedItemList.getQuantity();
+            totalPrice += itemTotal;
+
+            OrderedItemDetails orderedItemDetails = new OrderedItemDetails();
+            orderedItemDetails.setOrder(orders);
+            orderedItemDetails.setItem(item);
+            orderedItemDetails.setQuantity(orderedItemList.getQuantity());
+            orderedItemDetails.setUnitPrice(stock.getPrice());
+            orderedItemDetails.setTotalPrice(itemTotal);
+
+            itemList.add(orderedItemDetails);
+            /*orderedItemDetailsService.saveOrderedItemDetails(orderedItemDetails);*/
+            /*itemList.add(itemService.getItemById(orderedItemList.getItemId()));*/
         }
 
         orders.setTotalPrice(totalPrice);
-        orders.setOrderedItems(itemList);
+        orders.setOrderedItemDetails(itemList);
 
         return ResponseEntity.status(201).body(orderService.createOrder(orders));
+    }
+
+    @GetMapping("/orders")
+    public ResponseEntity<List<Orders>> getAllOrders() {
+        return ResponseEntity.status(200).body(orderService.getAllOrders());
     }
 }
