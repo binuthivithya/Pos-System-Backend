@@ -1,6 +1,5 @@
 package com.ijse.cmjdfinal.backend.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -34,14 +33,4 @@ public class Orders {
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderedItemDetails> orderedItemDetails = new ArrayList<>();
-
-    // Helper method to add items
-    public void addItem(Item item, int quantity, double unitPrice) {
-        OrderedItemDetails details = new OrderedItemDetails();
-        details.setOrder(this);
-        details.setItem(item);
-        details.setQuantity(quantity);
-        details.setUnitPrice(unitPrice);
-        orderedItemDetails.add(details);
-    }
 }

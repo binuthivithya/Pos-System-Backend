@@ -8,8 +8,6 @@ import com.ijse.cmjdfinal.backend.entity.Orders;
 import com.ijse.cmjdfinal.backend.entity.Stock;
 import com.ijse.cmjdfinal.backend.service.ItemService;
 import com.ijse.cmjdfinal.backend.service.OrderService;
-import com.ijse.cmjdfinal.backend.service.OrderedItemDetailsService;
-import com.ijse.cmjdfinal.backend.service.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -55,8 +53,6 @@ public class OrderController {
             orderedItemDetails.setTotalPrice(itemTotal);
 
             itemList.add(orderedItemDetails);
-            /*orderedItemDetailsService.saveOrderedItemDetails(orderedItemDetails);*/
-            /*itemList.add(itemService.getItemById(orderedItemList.getItemId()));*/
         }
 
         orders.setTotalPrice(totalPrice);
